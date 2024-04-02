@@ -1,0 +1,5 @@
+git checkout -b exercício_git
+
+(git add .) é adicionar todos
+
+(git add arquivo.txt ou arquivo.java ou arquivo.php etc... como é nome.txt) é somente um arquivo escolher adicionar
