@@ -3,3 +3,7 @@ git checkout -b exercício_git
 (git add .) é adicionar todos
 
 (git add arquivo.txt ou arquivo.java ou arquivo.php etc... como é nome.txt) é somente um arquivo escolher adicionar
+
+(git rm --cached comando.txt) é somente excluir um arquivo
+
+(git push origin exercício_git) é qual pegar nome branch vai subir 
