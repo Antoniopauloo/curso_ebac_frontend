@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda de Contatos</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    form {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input[type="text"] {
+        width: calc(100% - 20px); /* Considera o padding do formulário */
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box; /* Garante que o padding não afete a largura total */
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        width: calc(100% - 20px); /* Considera o padding do formulário */
+    }
+
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    .success-message, .error-message {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .success-message {
+        color: #4CAF50;
+    }
+
+    .error-message {
+        color: #f44336;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Agenda de Contatos</h2>
+
+    <form id="formulario">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" >
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone" >
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <div id="mensagem" class="success-message"></div>
+
+    <table id="contatos">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Linhas de contatos serão adicionadas aqui -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById('formulario').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita o envio do formulário por padrão
+
+        // Captura os valores do formulário
+        var nome = document.getElementById('nome').value;
+        var telefone = document.getElementById('telefone').value;
+
+        // Simula o envio do formulário
+        // Aqui você pode adicionar a lógica de envio para o servidor
+        // Por exemplo, usando XMLHttpRequest ou fetch para enviar os dados ao backend
+
+        // Verifica se os campos não estão vazios
+        if (nome.trim() !== '' && telefone.trim() !== '') {
+            // Cria uma nova linha na tabela com os dados inseridos
+            var tabela = document.getElementById('contatos').getElementsByTagName('tbody')[0];
+            var novaLinha = tabela.insertRow();
+            var colunaNome = novaLinha.insertCell(0);
+            var colunaTelefone = novaLinha.insertCell(1);
+            colunaNome.textContent = nome;
+            colunaTelefone.textContent = telefone;
+
+            // Limpa os campos do formulário após o cadastro
+            document.getElementById('nome').value = '';
+            document.getElementById('telefone').value = '';
+
+            // Exibe a mensagem de sucesso
+            var mensagem = document.getElementById('mensagem');
+            mensagem.textContent = 'Contato enviado com sucesso!';
+            mensagem.classList.remove('error-message');
+            mensagem.classList.add('success-message');
+        } else {
+            // Exibe a mensagem de erro se os campos estiverem vazios
+            var mensagem = document.getElementById('mensagem');
+            mensagem.textContent = 'Não é possível enviar o contato. Preencha todos os campos.';
+            mensagem.classList.remove('success-message');
+            mensagem.classList.add('error-message');
+        }
+    });
+</script>
+
+</body>
+</html>
