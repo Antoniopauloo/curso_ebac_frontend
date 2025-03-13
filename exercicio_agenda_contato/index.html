@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda de Contatos</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    form {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        width: 100%;
+        position: relative;
+        box-sizing: border-box; /* Corrigir o tamanho do padding */
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input[type="text"] {
+        width: calc(100% - 20px);
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        width: calc(100% - 20px);
+        margin-bottom: 10px; /* Espaço abaixo do botão */
+    }
+
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    .loader {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #4CAF50;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 999;
+        display: none;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+         100% { transform: rotate(360deg); }
+     }
+
+    /* Estilos para a tabela */
+    .table-container {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    /* Estilos para o modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+        max-width: 400px; /* Largura máxima */
+        border-radius: 5px;
+    }
+
+    .modal-message {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    /* Estilos responsivos */
+    @media screen and (max-width: 600px) {
+        form {
+            padding: 15px;
+        }
+        input[type="text"] {
+            width: calc(100% - 16px);
+        }
+        button[type="submit"] {
+            width: calc(100% - 16px);
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Agenda de Contatos</h2>
+
+    <form id="formulario">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone">
+        <button type="submit">Cadastrar</button>
+        <div class="loader"></div> <!-- Loader para indicar processamento -->
+    </form>
+
+    <div class="table-container" style="display: none;">
+        <table id="contatos">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas de contatos serão adicionadas aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="modalMensagem" class="modal">
+        <div class="modal-content">
+            <p id="modalTexto" class="modal-message"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Array para armazenar os contatos
+    var contatos = [];
+    var tabelaContatos = document.getElementById('contatos');
+    var formulario = document.getElementById('formulario');
+    var loader = document.querySelector('.loader');
+    var modalMensagem = document.getElementById('modalMensagem');
+    var modalTexto = document.getElementById('modalTexto');
+    var nomeInput = document.getElementById('nome');
+    var telefoneInput = document.getElementById('telefone');
+    var editarIndex = -1; // Índice do contato em edição
+
+    formulario.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita o envio do formulário por padrão
+
+        // Captura os valores do formulário
+        var nome = nomeInput.value.trim();
+        var telefone = telefoneInput.value.trim();
+
+        // Verifica se os campos estão vazios
+        if (nome === '' || telefone === '') {
+            // Exibe a mensagem de erro se os campos estiverem vazios
+            exibirMensagem('Não é possível enviar o contato. Preencha todos os campos.', 'error-message');
+            return; // Retorna sem submeter o formulário
+        }
+
+        // Verifica se o contato já existe na lista
+        var contatoExistente = contatos.some(function(contato) {
+            return contato.nome.toLowerCase() === nome.toLowerCase() || contato.telefone === telefone;
+        });
+
+        if (contatoExistente) {
+            // Exibe a mensagem de erro se o contato já existe
+            exibirMensagem('Este contato já está cadastrado.', 'error-message');
+        } else {
+            if (editarIndex === -1) {
+                // Adiciona o contato ao array se não estiver em modo de edição
+                contatos.push({ nome: nome, telefone: telefone });
+            } else {
+                // Atualiza o contato em edição
+                contatos[editarIndex].nome = nome;
+                contatos[editarIndex].telefone = telefone;
+                editarIndex = -1; // Sai do modo de edição
+            }
+
+            // Limpa os campos do formulário após o cadastro ou edição
+            nomeInput.value = '';
+            telefoneInput.value = '';
+
+            // Atualiza a tabela de contatos
+            atualizarTabelaContatos();
+
+            // Exibe a mensagem de sucesso
+            exibirMensagem('Contato enviado com sucesso!', 'success-message');
+
+            // Exibe a tabela após o cadastro ou edição
+            document.querySelector('.table-container').style.display = 'block';
+
+            // Exibe o loader durante 3 segundos (3000 milissegundos)
+            loader.style.display = 'block';
+            setTimeout(function() {
+                loader.style.display = 'none';
+            }, 3000);
+        }
+    });
+
+    function exibirMensagem(mensagem, classe) {
+        modalTexto.textContent = mensagem;
+        modalTexto.className = classe + ' modal-message'; // Adiciona a classe modal-message
+        modalMensagem.style.display = 'block'; // Exibe o modal
+
+        // Fecha o modal após 3 segundos (3000 milissegundos)
+        setTimeout(function() {
+            modalMensagem.style.display = 'none';
+        }, 3000);
+    }
+
+    function atualizarTabelaContatos() {
+        var tbody = tabelaContatos.querySelector('tbody');
+        tbody.innerHTML = ''; // Limpa o conteúdo da tabela
+
+        contatos.forEach(function(contato, index) {
+            var novaLinha = tbody.insertRow();
+            var colunaNome = novaLinha.insertCell(0);
+            var colunaTelefone = novaLinha.insertCell(1);
+            var colunaAcoes = novaLinha.insertCell(2);
+
+            colunaNome.textContent = contato.nome;
+            colunaTelefone.textContent = contato.telefone;
+
+            // Botão Editar
+            var btnEditar = document.createElement('button');
+            btnEditar.textContent = 'Editar';
+            btnEditar.style.background = "green";
+            btnEditar.style.padding = "5px 7px";
+            btnEditar.style.color = "#fff"; 
+            btnEditar.style.borderRadius = "10px";
+            btnEditar.style.marginRight = '5px';
+            btnEditar.style.border = "none";
+            btnEditar.addEventListener('click', function() {
+                // Preenche o formulário com os dados do contato selecionado para edição
+                nomeInput.value = contato.nome;
+                telefoneInput.value = contato.telefone;
+                editarIndex = index; // Marca o índice do contato em edição
+            });
+            colunaAcoes.appendChild(btnEditar);
+
+            // Botão Excluir
+            var btnExcluir = document.createElement('button');
+            btnExcluir.textContent = 'Excluir';
+            btnExcluir.style.background = "red";
+            btnExcluir.style.padding = "5px 7px";
+            btnExcluir.style.color = "#fff"; 
+            btnExcluir.style.borderRadius = "10px";
+            btnExcluir.style.marginRight = '5px';
+            btnExcluir.style.border = "none";
+            btnExcluir.addEventListener('click', function() {
+                // Implemente a lógica para excluir o contato aqui
+                contatos.splice(index, 1); // Remove o contato da lista
+                atualizarTabelaContatos(); // Atualiza a tabela após a remoção
+            });
+            colunaAcoes.appendChild(btnExcluir);
+        });
+    }
+</script>
+
+</body>
+</html>
