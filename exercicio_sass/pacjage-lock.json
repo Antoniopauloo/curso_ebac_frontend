@@ -1,0 +1,14 @@
+{
+    "name": "sass-project",
+    "version": "1.0.0",
+    "description": "Projeto com Sass",
+    "main": "index.js",
+    "scripts": {
+        "sass": "sass src/main.scss build/main.css --no-source-map"
+    },
+    "author": "Seu Nome",
+    "license": "ISC",
+    "devDependencies": {
+        "sass": "^1.54.4"
+    }
+}
