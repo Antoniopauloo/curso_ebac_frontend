@@ -1,3 +1,0 @@
-node_modules
-bem
-npm run sass .\scss\style.scss .\bem\style.css
