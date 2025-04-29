@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparação entre JSP e Angular</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --code-bg: #282c34;
+            --code-color: #e5e9f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--background-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        h3 {
+            color: var(--text-color);
+            font-size: 1.3rem;
+            margin: 1rem 0;
+        }
+
+        p {
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-example {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        ul {
+            list-style-type: none;
+            margin-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        ul li::before {
+            content: "•";
+            color: var(--secondary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        .differences {
+            margin-top: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .differences dt {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .differences dd {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Efeito hover nos exemplos de código */
+        .code-example:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Destaque de sintaxe personalizado */
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .comment { color: #5c6370; font-style: italic; }
+        .function { color: #61afef; }
+        .variable { color: #e06c75; }
+        .operator { color: #56b6c2; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            pre {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comparação entre JSP e Angular: A Evolução do Desenvolvimento Web</h1>
+
+        <h2>JSP (Java Server Pages) - Arquitetura Antiga</h2>
+        <p>JSP é uma tecnologia que permite criar páginas web dinâmicas usando Java. Nas aplicações antigas:</p>
+        <ul>
+            <li>O servidor processa toda a lógica e gera o HTML</li>
+            <li>As páginas são renderizadas no servidor</li>
+            <li>Cada interação requer um novo carregamento da página</li>
+            <li>O código Java é misturado com HTML na mesma página</li>
+        </ul>
+
+        <div class="code-example">
+            <h3>Exemplo de código JSP:</h3>
+            <pre><code><span class="keyword">&lt;%@ page</span> <span class="variable">language</span>=<span class="string">"java"</span> <span class="variable">contentType</span>=<span class="string">"text/html; charset=UTF-8"</span> <span class="variable">pageEncoding</span>=<span class="string">"UTF-8"</span><span class="keyword">%&gt;</span>
+<span class="operator">&lt;!</span><span class="keyword">DOCTYPE</span> html<span class="operator">&gt;</span>
+<span class="operator">&lt;</span><span class="keyword">html</span><span class="operator">&gt;</span>
+<span class="operator">&lt;</span><span class="keyword">head</span><span class="operator">&gt;</span>
+    <span class="operator">&lt;</span><span class="keyword">title</span><span class="operator">&gt;</span>Exemplo JSP<span class="operator">&lt;/</span><span class="keyword">title</span><span class="operator">&gt;</span>
+<span class="operator">&lt;/</span><span class="keyword">head</span><span class="operator">&gt;</span>
+<span class="operator">&lt;</span><span class="keyword">body</span><span class="operator">&gt;</span>
+    <span class="keyword">&lt;%</span> 
+    <span class="keyword">String</span> <span class="variable">mensagem</span> = <span class="string">"Olá, usuário!"</span>;
+    out.println(mensagem);
+    <span class="keyword">%&gt;</span>
+<span class="operator">&lt;/</span><span class="keyword">body</span><span class="operator">&gt;</span>
+<span class="operator">&lt;/</span><span class="keyword">html</span><span class="operator">&gt;</span></code></pre>
+        </div>
+
+        <h2>Angular - Arquitetura Moderna</h2>
+        <p>Angular é um framework moderno para criar Single Page Applications (SPAs):</p>
+        <ul>
+            <li>A lógica roda no navegador do usuário (client-side)</li>
+            <li>Não precisa recarregar a página para cada interação</li>
+            <li>Separação clara entre front-end e back-end</li>
+            <li>Utiliza componentes reutilizáveis</li>
+        </ul>
+
+        <div class="code-example">
+            <h3>Exemplo de código Angular:</h3>
+            <pre><code><span class="comment">// arquivo: hello.component.ts</span>
+<span class="keyword">import</span> { Component } <span class="keyword">from</span> <span class="string">'@angular/core'</span>;
+
+<span class="operator">@</span><span class="function">Component</span>({
+  <span class="variable">selector</span>: <span class="string">'app-hello'</span>,
+  <span class="variable">template</span>: <span class="string">`
+    &lt;h1&gt;{{ mensagem }}&lt;/h1&gt;
+  `</span>
+})
+<span class="keyword">export class</span> <span class="function">HelloComponent</span> {
+  <span class="variable">mensagem</span> = <span class="string">'Olá, usuário!'</span>;
+}</code></pre>
+        </div>
+
+        <h2>Principais Diferenças</h2>
+        <dl class="differences">
+            <dt>1. Processamento:</dt>
+            <dd>
+                <ul>
+                    <li>JSP: Servidor gera todo o HTML</li>
+                    <li>Angular: Navegador processa a lógica e atualiza a página</li>
+                </ul>
+            </dd>
+
+            <dt>2. Experiência do Usuário:</dt>
+            <dd>
+                <ul>
+                    <li>JSP: Recarrega a página inteira a cada interação</li>
+                    <li>Angular: Atualizações suaves e parciais da interface</li>
+                </ul>
+            </dd>
+
+            <dt>3. Manutenção:</dt>
+            <dd>
+                <ul>
+                    <li>JSP: Código misturado, mais difícil de manter</li>
+                    <li>Angular: Organização em componentes, mais modular</li>
+                </ul>
+            </dd>
+
+            <dt>4. Performance:</dt>
+            <dd>
+                <ul>
+                    <li>JSP: Mais carga no servidor</li>
+                    <li>Angular: Distribuição melhor dos recursos</li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</body>
+</html>
